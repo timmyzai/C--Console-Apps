@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace Helpers
 {
     public class Helper
@@ -13,6 +15,13 @@ namespace Helpers
             {
                 Console.WriteLine(string.Join(",", pair));
             }
+        }
+
+        public static string GetEnumDescription(Enum value)
+        {
+            var field = value.GetType().GetField(value.ToString());
+            var attribute = field.GetCustomAttributes(typeof(DescriptionAttribute), false).FirstOrDefault() as DescriptionAttribute;
+            return attribute != null ? attribute.Description : value.ToString();
         }
     }
 }

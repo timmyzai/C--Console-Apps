@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Globalization;
 
 namespace ReptileTypeAnalyzerNamespace
@@ -69,12 +68,5 @@ namespace ReptileTypeAnalyzerNamespace
             var result = $"There are {definedText}{undefinedText} in {textInfo.ToTitleCase(groupName)}.";
             Console.WriteLine(result);
         }
-        private static string GetDescription(Enum value)
-        {
-            var field = value.GetType().GetField(value.ToString());
-            var attribute = field.GetCustomAttributes(typeof(DescriptionAttribute), false).FirstOrDefault() as DescriptionAttribute;
-            return attribute != null ? attribute.Description : value.ToString();
-        }
-
     }
 }
