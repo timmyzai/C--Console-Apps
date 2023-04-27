@@ -9,22 +9,43 @@ namespace EncodeDecode
         {
             try
             {
-                Console.WriteLine("Enter text that needs to be encrypted..");
-                string original = Console.ReadLine();
                 string secretPhrase = "timmy's secret phrase is 32 char";
+                while (true)
+                {
+                    Console.WriteLine("\nEnter 'e' to encrypt, 'd' to decrypt, or 'x' to exit:");
+                    string option = Console.ReadLine().ToLower();
 
-                string encrypted = EncryptString(secretPhrase, original);
-                string decrypted = DecryptString(secretPhrase, encrypted);
-
-                Console.WriteLine("Original: {0}", original);
-                Console.WriteLine("encrypted : {0}", encrypted);
-                Console.WriteLine("decrypted : {0}", decrypted);
+                    if (option == "e")
+                    {
+                        Console.WriteLine("\nEnter text that needs to be encrypted:");
+                        string original = Console.ReadLine();
+                        string encrypted = EncryptString(secretPhrase, original);
+                        Console.WriteLine("\nEncrypted text: {0}", encrypted);
+                    }
+                    else if (option == "d")
+                    {
+                        Console.WriteLine("\nEnter text that needs to be decrypted:");
+                        string encrypted = Console.ReadLine();
+                        string decrypted = DecryptString(secretPhrase, encrypted);
+                        Console.WriteLine("\nDecrypted text: {0}", decrypted);
+                    }
+                    else if (option == "x")
+                    {
+                        Console.WriteLine("\nThank you for using the encryption/decryption app!");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nInvalid option! Please enter 'e', 'd', or 'x'.");
+                    }
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error: {0}", e.Message);
             }
         }
+
         public string EncryptString(string key, string toEncrypt)
         {
             byte[] iv = new byte[16];
@@ -82,19 +103,43 @@ namespace EncodeDecode
         {
             try
             {
-                Console.WriteLine("Enter text that needs to be encrypted..");
-                string original = Console.ReadLine();
                 string secretPhrase = "timmy's secret phrase is 32 char";
-
-                using (RijndaelManaged myRijndael = new RijndaelManaged())
+                while (true)
                 {
-                    myRijndael.GenerateIV();
-                    string encrypted = EncryptStringToBytes(original, secretPhrase, myRijndael.IV);
-                    string decrypted = DecryptStringFromBytes(encrypted, secretPhrase, myRijndael.IV);
-
-                    Console.WriteLine("Original: {0}\n", original);
-                    Console.WriteLine("encrypted : {0}\n", encrypted);
-                    Console.WriteLine("decrypted : {0}", decrypted);
+                    Console.WriteLine("\nEnter 'e' to encrypt, 'd' to decrypt, or 'x' to exit:");
+                    string option = Console.ReadLine().ToLower();
+                    if (option == "e")
+                    {
+                        Console.WriteLine("\nEnter text that needs to be encrypted:");
+                        string original = Console.ReadLine();
+                        using (RijndaelManaged myRijndael = new RijndaelManaged())
+                        {
+                            myRijndael.GenerateIV();
+                            string encrypted = EncryptStringToBytes(secretPhrase, original, myRijndael.IV);
+                            Console.WriteLine("\nEncrypted text: {0}", encrypted);
+                        }
+                    }
+                    else if (option == "d")
+                    {
+                        Console.WriteLine("\nEnter text that needs to be decrypted:");
+                        string encrypted = Console.ReadLine();
+                        Console.WriteLine("\nEnter text that needs to be encrypted:");
+                        string original = Console.ReadLine();
+                        using (RijndaelManaged myRijndael = new RijndaelManaged())
+                        {
+                            string decrypted = DecryptStringFromBytes(secretPhrase, encrypted, myRijndael.IV);
+                            Console.WriteLine("\nDecrypted text: {0}", decrypted);
+                        }
+                    }
+                    else if (option == "x")
+                    {
+                        Console.WriteLine("\nThank you for using the encryption/decryption app!");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nInvalid option! Please enter 'e', 'd', or 'x'.");
+                    }
                 }
             }
             catch (Exception e)
@@ -102,6 +147,7 @@ namespace EncodeDecode
                 Console.WriteLine("Error: {0}", e.Message);
             }
         }
+
         public string EncryptStringToBytes(string plainText, string secretPhrase, byte[] IV)
         {
             byte[] encrypted;
