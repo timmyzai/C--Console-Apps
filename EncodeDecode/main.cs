@@ -9,7 +9,7 @@ namespace EncodeDecode
         {
             try
             {
-                string secretPhrase = "timmy's secret phrase is 32 char";
+                string secretPhrase = "bytebankawesome's secret phrases"; //32 bytes (can use UTF-8 string length & byte counter)
                 while (true)
                 {
                     Console.WriteLine("\nEnter 'e' to encrypt, 'd' to decrypt, or 'x' to exit:");
@@ -55,6 +55,7 @@ namespace EncodeDecode
             {
                 aes.Key = Encoding.UTF8.GetBytes(key);
                 aes.IV = iv;
+                aes.Padding = PaddingMode.PKCS7;
 
                 ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
 
@@ -82,6 +83,8 @@ namespace EncodeDecode
             {
                 aes.Key = Encoding.UTF8.GetBytes(key);
                 aes.IV = iv;
+                aes.Padding = PaddingMode.PKCS7;
+
                 ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
 
                 using (MemoryStream memoryStream = new MemoryStream(toDecrypt))
@@ -148,7 +151,7 @@ namespace EncodeDecode
             }
         }
 
-        public string EncryptStringToBytes(string plainText, string secretPhrase, byte[] IV)
+        public string EncryptStringToBytes(string secretPhrase, string plainText, byte[] IV)
         {
             byte[] encrypted;
             using (RijndaelManaged rijAlg = new RijndaelManaged())
@@ -171,7 +174,7 @@ namespace EncodeDecode
             return Convert.ToBase64String(encrypted);
         }
 
-        public string DecryptStringFromBytes(string encrypted, string secretPhrase, byte[] IV)
+        public string DecryptStringFromBytes(string secretPhrase, string encrypted, byte[] IV)
         {
             string plaintext = null;
             byte[] buffer = Convert.FromBase64String(encrypted);

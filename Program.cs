@@ -3,14 +3,19 @@ using AnimalShelterManagerNamespace;
 using CryptoApisNamespace;
 using EncodeDecode;
 using ListGroupingNamespace;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.Hosting;
 using PDFAnalyzerNamespace;
 using ReptileTypeAnalyzerNamespace;
-using TestNamespace;
 
 internal class Program
 {
     public static void Main(string[] args)
     {
+        #region Hosting with Swagger
+        CreateHostBuilder(args).Build().Run();
+        #endregion
         #region EncodeDecode
         // new AesOperation().Main();
         // new RijndaelExample().Main();
@@ -26,7 +31,7 @@ internal class Program
         // new AnimalShelterManager().Main();
         #endregion
         #region Test (Git Ignored)
-        // new Test().Main("asd","asddfasdf",3);
+        // new Test().Main();
         #endregion
         #region PdfContent
         // PdfContent content = new PDFAnalyzer().ReadPdfContent();
@@ -34,11 +39,26 @@ internal class Program
         // new PDFAnalyzer().WriteNewPdfFile(content);
         #endregion
         #region CryptoApis
-        new CryptoApis().GetDepositAddress();
-        // new CryptoApis().CreateTransactionFromAddress("0x97b5a89f327bc3a15615fbda6f7f19df7874dd12", "0xBf49A48a8d14DEb3582f01f897A3F24B0710F6a9", (decimal)0.1997, "binance-smart-chain", "testnet");
-        // new CryptoApis().CreateTransactionFromWallet("0xBf49A48a8d14DEb3582f01f897A3F24B0710F6a9", (decimal)0.02);
-        // new CryptoApis().CreateTransactionFromWallet("0xBf49A48a8d14DEb3582f01f897A3F24B0710F6a9", (decimal)0.19979, "binance-smart-chain", "testnet");
+        // new CryptoApis().GetDepositAddress();
+        // new CryptoApis().CreateTransactionFromAddress("0x97b5a89f327bc3a15615fbda6f7f19df7874dd12","0xBf49A48a8d14DEb3582f01f897A3F24B0710F6a9", (decimal)0.1997, "binance-smart-chain", "testnet");
+        // new CryptoApis().CreateTransactionFromWallet("tb1qnfwrrkf7guyksnw8m9940z6t0mswqly3h4seka", (decimal)0.006, "bitcoin", "testnet");
+        // new CryptoApis().GetWalletAssetDetail("bitcoin", "testnet");
         #endregion
-
     }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+    Host.CreateDefaultBuilder(args)
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+            webBuilder.UseStartup<Startup>();
+            webBuilder.ConfigureKestrel(
+            options =>
+            {
+                options.ListenLocalhost(8888, listenOptions =>
+                {
+                    listenOptions.Protocols = HttpProtocols.Http1;
+                    listenOptions.UseHttps();
+                });
+            });
+        });
 }

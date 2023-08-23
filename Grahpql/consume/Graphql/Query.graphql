@@ -1,0 +1,15 @@
+query GetBookDataQuery {
+  books {
+    id
+    title
+    author
+  }
+}
+
+query AddBookQuery{
+  addBook(input: { author: "authorString", title: "titleString" }) {
+    id
+    title
+    author
+  }
+}

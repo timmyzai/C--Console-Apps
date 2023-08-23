@@ -1,3 +1,4 @@
+using Helpers;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -55,6 +56,25 @@ namespace CryptoApisNamespace
                 throw new Exception(ex.Message);
             }
         }
+        public async void GetWalletAssetDetail(string blockchain = blockchain, string network = network)
+        {
+            try
+            {
+                var apiUrl = $"{base_url}/wallet-as-a-service/wallets/{walletId}/{blockchain}/{network}";
+
+                var client = new RestClient(new Uri(apiUrl));
+                var request = new RestRequest();
+                request.Method = Method.Get;
+                request.AddHeader("X-API-Key", api_key);
+                RestResponse response = client.Execute(request);
+
+                TxtEditor.WriteTxt(response.Content, "CryptoApis/Result.txt", true);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         public async void CreateTransactionFromWallet(string recipientAddress, decimal amount, string blockchain = blockchain, string network = network)
         {
             try
@@ -78,7 +98,7 @@ namespace CryptoApisNamespace
                 var json = $@"{{""data"": {{""item"": {dataJson}}}}}";
                 request.AddParameter("application/json", json, ParameterType.RequestBody);
                 RestResponse response = client.Execute(request);
-                Console.WriteLine(response.Content);
+                TxtEditor.WriteTxt(response.Content, Environment.CurrentDirectory);
             }
             catch (Exception ex)
             {

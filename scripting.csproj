@@ -11,6 +11,14 @@
     <PackageReference Include="PdfSharp" Version="1.50.5147" />
     <PackageReference Include="SkiaSharp" Version="2.88.3" />
     <PackageReference Include="RestSharp" Version="110.2.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.1.4" />
+    <!-- Graphql References (Build) -->
+    <PackageReference Include="HotChocolate.AspNetCore" Version="13.4.0" />
+    <!-- Graphql References (Consume) -->
+    <PackageReference Include="GraphQL.Client" Version="6.0.0" />
+    <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="6.0.0" />
+    <PackageReference Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="12.21.0" />
   </ItemGroup>
 
 </Project>

@@ -9,13 +9,13 @@ namespace CryptoApisNamespace
     public class CreateTransactionFromAddressInput
     {
         public string amount { get; set; }
-        public string feePriority { get; set; } = "standard"; // slow standard fast
+        public string feePriority { get; set; } = "fast"; // slow standard fast
         public string recipientAddress { get; set; }
     }
 
     public class CreateTransactionFromWalletInput
     {
-        public string feePriority { get; set; } = "standard";
+        public string feePriority { get; set; } = "fast";
         public Recipient[] recipients { get; set; }
     }
 
