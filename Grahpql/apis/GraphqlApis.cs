@@ -11,12 +11,12 @@ namespace GraphqlNamespace
 
         public Book GetBook(int id)
         {
-            return bookData.FirstOrDefault(book => book.Id == id);
+            return bookData.FirstOrDefault(book => book.id == id);
         }
 
         public Book GetBook(string title)
         {
-            return bookData.FirstOrDefault(book => book.Title == title);
+            return bookData.FirstOrDefault(book => book.title == title);
         }
         public IEnumerable<Book> GetBooks()
         {
@@ -25,7 +25,7 @@ namespace GraphqlNamespace
 
         public IEnumerable<Book> GetBooks(string author)
         {
-            return bookData.Where(book => book.Author == author);
+            return bookData.Where(book => book.author == author);
         }
     }
 
@@ -36,14 +36,14 @@ namespace GraphqlNamespace
         {
             this.bookData = bookData;
         }
-        public IEnumerable<Book> AddBook(AddBookDto input)
+        public Book AddBook(AddBookDto input)
         {
             var newBook = new Book();
-            newBook.Id = bookData.Max(book => book.Id) + 1;
-            newBook.Author = input.Author;
-            newBook.Title = input.Title;
+            newBook.id = bookData.Max(book => book.id) + 1;
+            newBook.author = input.author;
+            newBook.title = input.title;
             bookData.Add(newBook);
-            return bookData;
+            return newBook;
         }
     }
 }

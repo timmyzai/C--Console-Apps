@@ -1,4 +1,4 @@
-query GetBookDataQuery {
+query GetBookData {
   books {
     id
     title
@@ -6,10 +6,25 @@ query GetBookDataQuery {
   }
 }
 
-query AddBookQuery{
-  addBook(input: { author: "authorString", title: "titleString" }) {
+mutation AddBook($input: AddBookDtoInput!) {
+  addBook(input: $input) {
     id
     title
     author
+  }
+}
+
+# extra queries and mutations for testing
+query GetWalletData {
+  wallets {
+    id
+    money
+  }
+}
+
+mutation AddWallet($input: AddWalletDtoInput!) {
+  addWallet(input: $input) {
+    id
+    money
   }
 }

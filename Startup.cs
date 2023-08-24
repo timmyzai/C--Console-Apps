@@ -36,8 +36,8 @@ public class Startup
 
         var bookData = new List<Book>
             {
-                new Book { Id = 1, Title = "Sun light", Author = "abc123" },
-                new Book { Id = 2, Title = "Moon light", Author = "xyz456" }
+                new Book { id = 1, title = "Sun light", author = "abc123" },
+                new Book { id = 2, title = "Moon light", author = "xyz456" }
             };
         services.AddSingleton<List<Book>>(bookData);
         services.AddGraphQLServer().AddQueryType<BookQuery>().AddMutationType<BookMutation>();

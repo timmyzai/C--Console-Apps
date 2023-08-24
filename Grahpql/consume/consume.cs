@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using GraphQL;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
@@ -9,26 +8,22 @@ namespace GraphqlNamespace
     [Route("testing/[controller]/[action]")]
     public class GraphqlConsumeService : Controller
     {
-        private readonly string allQueries;
+        private readonly string allQueries = System.IO.File.ReadAllText("./Grahpql/consume/Graphql/Query.graphql").Replace("\n", " ");
+        private readonly string graphQLEndpoint = "https://localhost:8888/graphql/";
 
-        public GraphqlConsumeService()
-        {
-            this.allQueries = System.IO.File.ReadAllText("../../Grahpql/consume/Graphql/Query.graphql");
-        }
         [HttpGet]
         public async Task<IEnumerable<Book>> GetBook()
         {
             try
             {
                 {
-                    var graphQLEndpoint = "https://localhost:8888/graphql/";
                     var graphQLHttpClient = new GraphQLHttpClient(graphQLEndpoint, new NewtonsoftJsonSerializer());
-                    var query = ExtractGraphqlQueryByName(GraphqlQueries.GetBookDataQuery);
+                    var query = ExtractGraphqlQueryByName(GraphqlActionType.Query, GraphqlMethodName.GetBookDataQuery);
                     var graphQlQuery = new GraphQLRequest() { Query = query };
 
-                    var response = await graphQLHttpClient.SendQueryAsync<MultipleBooksQueryResponse>(graphQlQuery);
+                    var response = await graphQLHttpClient.SendQueryAsync<BooksListResponse>(graphQlQuery);
 
-                    return response.Data.Books;
+                    return response.Data.books;
                 }
             }
             catch (Exception ex)
@@ -37,21 +32,17 @@ namespace GraphqlNamespace
             }
         }
         [HttpPost]
-        public async Task<IEnumerable<Book>> CreateBook(AddBookDto input)
+        public async Task<Book> CreateBook([FromBody] BookInput input)
         {
             try
             {
                 {
-                    var graphQLEndpoint = "https://localhost:7184/graphql/";
                     var graphQLHttpClient = new GraphQLHttpClient(graphQLEndpoint, new NewtonsoftJsonSerializer());
-                    var query = ExtractGraphqlQueryByName(GraphqlQueries.AddBookQuery);
-                    query = query.Replace("authorString", input.Author);
-                    query = query.Replace("titleString", input.Title);
-                    var graphQlQuery = new GraphQLRequest() { Query = query };
+                    var query = ExtractGraphqlQueryByName(GraphqlActionType.Mutation, GraphqlMethodName.AddBookQuery);
+                    var graphQlQuery = new GraphQLRequest() { Query = query, Variables = input };
+                    var response = await graphQLHttpClient.SendMutationAsync<BookResponse>(graphQlQuery);
 
-                    var response = await graphQLHttpClient.SendQueryAsync<MultipleBooksQueryResponse>(graphQlQuery);
-
-                    return response.Data.Books;
+                    return response.Data.addBook;
                 }
             }
             catch (Exception ex)
@@ -60,19 +51,25 @@ namespace GraphqlNamespace
             }
         }
 
-        private string ExtractGraphqlQueryByName(string queryName)
+        private string ExtractGraphqlQueryByName(string actionName, string queryName)
         {
-            var pattern = $"query {queryName}\\s*{{([\\s\\S]*?\\n}})";
-            var queryMatch = Regex.Match(allQueries, pattern);
+            string startMarker = $"{actionName} {queryName}";
+            int startIndex = allQueries.IndexOf(startMarker);
+            if (startIndex == -1) return null;
 
-            if (queryMatch.Success)
+            int endIndex = allQueries.IndexOf("}", startIndex);
+            if (endIndex == -1) return null;
+            int nestedBraces = 1;
+            int currentIndex = endIndex + 1;
+            while (nestedBraces > 0 && currentIndex < allQueries.Length)
             {
-                return Regex.Replace(queryMatch.Value, @"\s+", " ").Trim();
+                if (allQueries[currentIndex] == '{') nestedBraces++;
+                else if (allQueries[currentIndex] == '}') nestedBraces--;
+                currentIndex++;
             }
-            else
-            {
-                throw new Exception($"Query with name '{queryName}' not found.");
-            }
+
+            var result = allQueries.Substring(startIndex, currentIndex - startIndex).Trim();
+            return result;
         }
     }
 }
