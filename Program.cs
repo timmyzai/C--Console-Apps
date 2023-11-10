@@ -6,6 +6,7 @@ using ListGroupingNamespace;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Hosting;
+using MutexConcurrency;
 using PDFAnalyzerNamespace;
 using ReptileTypeAnalyzerNamespace;
 
@@ -14,7 +15,7 @@ internal class Program
     public static void Main(string[] args)
     {
         #region Hosting with Swagger
-        CreateHostBuilder(args).Build().Run();
+        // CreateHostBuilder(args).Build().Run();
         #endregion
         #region EncodeDecode
         // new AesOperation().Main();
@@ -43,6 +44,9 @@ internal class Program
         // new CryptoApis().CreateTransactionFromAddress("0x97b5a89f327bc3a15615fbda6f7f19df7874dd12","0xBf49A48a8d14DEb3582f01f897A3F24B0710F6a9", (decimal)0.1997, "binance-smart-chain", "testnet");
         // new CryptoApis().CreateTransactionFromWallet("tb1qnfwrrkf7guyksnw8m9940z6t0mswqly3h4seka", (decimal)0.006, "bitcoin", "testnet");
         // new CryptoApis().GetWalletAssetDetail("bitcoin", "testnet");
+        #endregion
+        #region CryptoApis
+        new MutextConcurrencyTest().Main(100);
         #endregion
     }
 

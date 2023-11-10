@@ -19,6 +19,10 @@
     <PackageReference Include="GraphQL.Client" Version="6.0.0" />
     <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="6.0.0" />
     <PackageReference Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="12.21.0" />
+    <!-- Mutex Security Reference -->
+    <PackageReference Include="System.Security.AccessControl" Version="6.0.0" />
+    <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
+    <PackageReference Include="System.Threading.AccessControl" Version="7.0.1" />
   </ItemGroup>
 
 </Project>
