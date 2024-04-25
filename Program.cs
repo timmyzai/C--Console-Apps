@@ -1,14 +1,18 @@
 ﻿
 using AnimalShelterManagerNamespace;
+using AWS_Features;
 using CryptoApisNamespace;
+using Emails;
 using EncodeDecode;
 using ListGroupingNamespace;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Hosting;
 using MutexConcurrency;
+using Newtonsoft.Json;
 using PDFAnalyzerNamespace;
 using ReptileTypeAnalyzerNamespace;
+using SMS;
 
 internal class Program
 {
@@ -45,11 +49,28 @@ internal class Program
         // new CryptoApis().CreateTransactionFromWallet("tb1qnfwrrkf7guyksnw8m9940z6t0mswqly3h4seka", (decimal)0.006, "bitcoin", "testnet");
         // new CryptoApis().GetWalletAssetDetail("bitcoin", "testnet");
         #endregion
-        #region CryptoApis
-        new MutextConcurrencyTest().Main(100);
+        #region ConcurrencyTest
+        // new MutextConcurrencyTest().Main(100);
+        #endregion
+        #region Email
+        // new MailGun().SendTestEmail();
+        #endregion
+        #region SMS
+        // new TestInfobip().SendTestSMS();
+        #endregion
+        #region AWS
+        var encodeMethod = AWS_KMS.EncodeMethod.Symmetric;
+        var data = new
+        {
+            TransactionId = "123",
+            Amount = 100,
+            Currency = "USD",
+            TransactionDate = DateTime.Now
+        };
+        string toEncrypt = JsonConvert.SerializeObject(data);
+        new AWS_KMS().Test($"{encodeMethod} {toEncrypt}", encodeMethod);
         #endregion
     }
-
     public static IHostBuilder CreateHostBuilder(string[] args) =>
     Host.CreateDefaultBuilder(args)
         .ConfigureWebHostDefaults(webBuilder =>

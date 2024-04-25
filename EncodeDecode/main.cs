@@ -9,7 +9,9 @@ namespace EncodeDecode
         {
             try
             {
+                // string secretPhrase = "TT70EBtfTTsqhpFzBYcwSiVykcODIFZc"; //32 bytes (can use UTF-8 string length & byte counter)
                 string secretPhrase = "bytebankawesome's secret phrases"; //32 bytes (can use UTF-8 string length & byte counter)
+                // string secretPhrase = "timmy's secret phrase is 32 char"; //32 bytes (can use UTF-8 string length & byte counter)
                 while (true)
                 {
                     Console.WriteLine("\nEnter 'e' to encrypt, 'd' to decrypt, or 'x' to exit:");
@@ -74,10 +76,10 @@ namespace EncodeDecode
             return Convert.ToBase64String(array);
         }
 
-        public string DecryptString(string key, string encrypted)
+        public string DecryptString(string key, string encryptedText)
         {
             byte[] iv = new byte[16];
-            byte[] toDecrypt = Convert.FromBase64String(encrypted);
+            byte[] buffer = Convert.FromBase64String(encryptedText);
 
             using (Aes aes = Aes.Create())
             {
@@ -86,8 +88,7 @@ namespace EncodeDecode
                 aes.Padding = PaddingMode.PKCS7;
 
                 ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
-
-                using (MemoryStream memoryStream = new MemoryStream(toDecrypt))
+                using (MemoryStream memoryStream = new MemoryStream(buffer))
                 {
                     using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, decryptor, CryptoStreamMode.Read))
                     {
@@ -126,8 +127,6 @@ namespace EncodeDecode
                     {
                         Console.WriteLine("\nEnter text that needs to be decrypted:");
                         string encrypted = Console.ReadLine();
-                        Console.WriteLine("\nEnter text that needs to be encrypted:");
-                        string original = Console.ReadLine();
                         using (RijndaelManaged myRijndael = new RijndaelManaged())
                         {
                             string decrypted = DecryptStringFromBytes(secretPhrase, encrypted, myRijndael.IV);
